@@ -1,0 +1,167 @@
+.vscode/
+.vs/
+.idea
+
+
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+######################
+
+*.swp
+*.*~
+project.lock.json
+*.pyc
+nupkg/
+
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## published files
+publish/
+published/
+
+## node modules
+templates/node_modules/
+
+## backup directory
+backup/
+
+#Other directories
+notes/
+
+#### Build results
+# Data Layer
+src/Project.Data/[Oo]ut/
+src/Project.Data/[Oo]bj/
+src/Project.Data/[Bb]in/
+src/Project.Data/bld/
+src/Project.Data/build/
+src/Project.Data/x86/
+src/Project.Data/x64/
+src/Project.Data/[Rr]eleases/
+src/Project.Data/[Rr]elease/
+src/Project.Data/[Dd]ebugPublic/
+src/Project.Data/[Dd]ebug/
+
+# Api
+src/Project.Api/[Oo]ut/
+src/Project.Api/[Oo]bj/
+src/Project.Api/[Bb]in/
+src/Project.Api/bld/
+src/Project.Api/build/
+src/Project.Api/x86/
+src/Project.Api/x64/
+src/Project.Api/[Rr]eleases/
+src/Project.Api/[Rr]elease/
+src/Project.Api/[Dd]ebugPublic/
+src/Project.Api/[Dd]ebug/
+
+# Common
+src/Project.Common/[Oo]ut/
+src/Project.Common/[Oo]bj/
+src/Project.Common/[Bb]in/
+src/Project.Common/bld/
+src/Project.Common/build/
+src/Project.Common/x86/
+src/Project.Common/x64/
+src/Project.Common/[Rr]eleases/
+src/Project.Common/[Rr]elease/
+src/Project.Common/[Dd]ebugPublic/
+src/Project.Common/[Dd]ebug/
+
+# Entities
+src/Project.Entities/[Oo]ut/
+src/Project.Entities/[Oo]bj/
+src/Project.Entities/[Bb]in/
+src/Project.Entities/bld/
+src/Project.Entities/build/
+src/Project.Entities/x86/
+src/Project.Entities/x64/
+src/Project.Entities/[Rr]eleases/
+src/Project.Entities/[Rr]elease/
+src/Project.Entities/[Dd]ebugPublic/
+src/Project.Entities/[Dd]ebug/
+
+# Services
+src/Project.Services/[Oo]ut/
+src/Project.Services/[Oo]bj/
+src/Project.Services/[Bb]in/
+src/Project.Services/bld/
+src/Project.Services/build/
+src/Project.Services/x86/
+src/Project.Services/x64/
+src/Project.Services/[Rr]eleases/
+src/Project.Services/[Rr]elease/
+src/Project.Services/[Dd]ebugPublic/
+src/Project.Services/[Dd]ebug/
+
+# Web Frameworks
+src/Project.WebFrameworks/[Oo]ut/
+src/Project.WebFrameworks/[Oo]bj/
+src/Project.WebFrameworks/[Bb]in/
+src/Project.WebFrameworks/bld/
+src/Project.WebFrameworks/build/
+src/Project.WebFrameworks/x86/
+src/Project.WebFrameworks/x64/
+src/Project.WebFrameworks/[Rr]eleases/
+src/Project.WebFrameworks/[Rr]elease/
+src/Project.WebFrameworks/[Dd]ebugPublic/
+src/Project.WebFrameworks/[Dd]ebug/
+
+
+
+
+## others
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+msbuild.log
+msbuild.err
+msbuild.wrn

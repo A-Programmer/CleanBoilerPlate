@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Project.Entities\Project.Entities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Repositories\" />
+    <Folder Include="Services\" />
+    <Folder Include="Repositories\UserRepositories\" />
+    <Folder Include="Services\UserServices\" />
+    <Folder Include="Repositories\TestRepositories\" />
+    <Folder Include="Services\TestServices\" />
+    <Folder Include="Services\SecutiryServices\" />
+  </ItemGroup>
+</Project>
