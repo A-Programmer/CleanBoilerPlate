@@ -25,7 +25,9 @@ namespace Project.Webframeworks.Configurations
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+                // options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+                //     x => x.MigrationsAssembly("Project.Data"));
+                    options.UseNpgsql(configuration.GetConnectionString("PostgresConnection"),
                     x => x.MigrationsAssembly("Project.Data"));
             });
         }
