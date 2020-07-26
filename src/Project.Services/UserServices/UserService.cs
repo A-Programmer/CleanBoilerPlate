@@ -175,7 +175,76 @@ namespace Project.Services.UserServices
             }
             return rm;
         }
+        public async Task<ResultMessage> RemoveUser(User user)
+        {
+            var rm = new ResultMessage()
+            {
+                Status = false,
+                Message = ""
+            };
+            try
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                await _userManager.RemoveFromRolesAsync(user, roles);
+                var identityResult = await _userManager.DeleteAsync(user);
+                if(identityResult.Succeeded)
+                {
+                    rm.Status = true;
+                    rm.Message = "User has been removed.";
+                }
+                else
+                {
+                    rm.Status = false;
+                    foreach(var error in identityResult.Errors)
+                    {
+                        rm.Message += error.Description + "\n";
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                rm.Status = false;
+                rm.Message = ex.Message;
+            }
+            return rm;
+        }
+        public async Task<ResultMessage> Update(User user)
+        {
+            var rm = new ResultMessage
+            {
+                Status = false,
+                Message = ""
+            };
+            var existingUser = await _uow.Users.GetByIdAsync(user.Id);
+            if (existingUser == null)
+            {
+                rm.Status = false;
+                rm.Message = "User not found";
+                return rm;
+            }
+            
+            var identityResult = await _userManager.UpdateAsync(user);
+            if(identityResult.Succeeded)
+            {
+                rm.Status = true;
+                rm.Message = "User has been updated.";
+            }
+            else
+            {
+                rm.Status = false;
+                foreach(var error in identityResult.Errors)
+                {
+                    rm.Message += error.Description + "\n";
+                }
+            }
+            return rm;
+        }
         #endregion
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _uow.CommitAsync();
+        }
 
 
 

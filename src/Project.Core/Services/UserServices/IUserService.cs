@@ -31,6 +31,10 @@ namespace Project.Core.Services.UserServices
         Task<string> GenerateToken(User user);
         Task<ResultMessage> ChangePassword(User user, string token, string newPassword);
         Task UpdateSecurityStampAsync(User user);
+        Task<ResultMessage> RemoveUser(User user);
+        Task<ResultMessage> Update(User user);
+
+        Task<int> SaveChangesAsync();
 
 
         Task<User> GetUser(Guid id);

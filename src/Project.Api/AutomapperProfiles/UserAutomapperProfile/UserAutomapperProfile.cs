@@ -22,6 +22,9 @@ namespace Project.Api.AutomapperProfiles.UserAutomapperProfile
                 .ForMember(x => x.Gender, opt => opt.MapFrom(x => x.Gender.ToDisplay(DisplayProperty.Name)))
                 .ReverseMap();
 
+            CreateMap<User, UpdateUserDto>()
+                .ReverseMap();
+
 
         }
     }

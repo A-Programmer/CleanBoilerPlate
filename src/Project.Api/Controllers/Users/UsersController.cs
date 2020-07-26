@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Project.Api.Resources.UserDtos;
 using Project.Core.Services.UserServices;
 using Project.Entities;
-
+using Project.Webframeworks;
 
 namespace Project.Api.Controllers.Users
 {
@@ -68,11 +70,11 @@ namespace Project.Api.Controllers.Users
         public async Task<ActionResult<UserProfileDto>> Register(UserRegisterDto userDto)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return new BadRequestObjectResult(ModelState);
 
             var user = _mapper.Map<User>(userDto);
             var result = await _userService.RegisterAsync(user, userDto.Password);
-            if(result.Status)
+            if (result.Status)
             {
                 await _roleService.AddUserToRoleAsync(user, "user");
                 var registeredUser = await _userService.FindByNameAsync(userDto.UserName);
@@ -86,10 +88,75 @@ namespace Project.Api.Controllers.Users
         }
         #endregion
 
-        #region Update User
-
+        #region Delete User
+        [Route("{id:guid}")]
+        [HttpDelete]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var user = await _userService.GetUser(id);
+            if (user == null)
+                return new NotFoundObjectResult("User not found");
+            var result = await _userService.RemoveUser(user);
+            if (result.Status)
+                return Ok();
+            else
+                return BadRequest(result.Message);
+        }
         #endregion
 
+        #region Update User
+        [Route("{id:guid}")]
+        [HttpPut]
+        public async Task<ActionResult<UserProfileDto>> Update(Guid id, UpdateUserDto userDto)
+        {
+            if (!ModelState.IsValid)
+                return new BadRequestObjectResult(ModelState);
 
+            var existingUser = await _userService.GetUser(id);
+
+            if (existingUser == null)
+                return new NotFoundObjectResult("User could not be found.");
+
+            var user = _mapper.Map(userDto, existingUser);
+            var result = await _userService.Update(user);
+            if (result.Status)
+            {
+                var updatedUser = await _userService.GetUser(id);
+                var updatedUserDto = _mapper.Map<UserProfileDto>(updatedUser);
+                return updatedUserDto;
+            }
+            else
+            {
+                return BadRequest(result.Message);
+            }
+        }
+        #endregion
+
+        #region Patch Method
+        [HttpPatch("{id:guid}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<UserProfileDto>> Patch(Guid id, [FromBody] JsonPatchDocument<User> doc)
+        {
+            if (doc == null)
+                return new BadRequestObjectResult("Null");
+
+            var existingUser = await _userService.GetUser(id);
+            doc.ApplyTo(existingUser, ModelState);
+
+            if (!ModelState.IsValid)
+                return new BadRequestObjectResult(ModelState);
+            
+            var result = await _userService.Update(existingUser);
+
+            if(result.Status)
+            {
+                return _mapper.Map<UserProfileDto>(existingUser);
+            }
+            else
+            {
+                return new BadRequestObjectResult(result.Message);
+            }
+        }
+        #endregion
     }
 }

@@ -40,8 +40,8 @@ namespace Project.Data
             //Manage delete behevior
             modelBuilder.AddRestrictDeleteBehaviorConvention();
 
-            //If Guid used for id for entity
-            modelBuilder.AddSequentialGuidForIdConvention();
+            //If Guid used for id for entity in SQL Server database
+            //modelBuilder.AddSequentialGuidForIdConvention();
 
             ////Pluraliazing table names if RegisterAllEntities used
             //modelBuilder.AddPluralizingTableNameConvention();
