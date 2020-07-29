@@ -7,35 +7,51 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Project.Api.Resources.UserDtos;
+using Project.Api.ViewModels.IdentityViewModels;
+using Project.Common.Utilities;
 using Project.Core.Services.UserServices;
 using Project.Entities;
+using Project.Entities.Common;
 using Project.Webframeworks;
 
-namespace Project.Api.Controllers.Users
+namespace Project.Api.Controllers.v1
 {
-    [Route("api/[controller]")]
-    [ApiController]
+    [ApiVersion("1")]
     [Authorize(Roles = "admin")]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseController
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private readonly IRoleService _roleService;
+        private readonly IConfiguration _configuration;
+        private readonly PublicOptions _options;
         public UsersController(
             IUserService userService,
             IMapper mapper,
-            IRoleService roleService
+            IRoleService roleService,
+            IConfiguration configuration
         )
         {
             _userService = userService;
             _mapper = mapper;
             _roleService = roleService;
+            _configuration = configuration;
+            _options = configuration.GetSection("PublicSettings:PublicOptions").Get<PublicOptions>();
         }
+
+        //api/users
+        //api/users/:id
+        //api/users/:id/verifyPhone
+        //api/users/:id/verifyEmail
+        //api/users/:id/changepassword
+        //api/users/:phone/requestVerificationCode
+        //api/users/:id/resetPasswordWithCode
 
         #region Get users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UsersListResponseDto>>> List(int skip = 0, int take = 0)
+        public virtual async Task<ActionResult<IEnumerable<UsersListResponseDto>>> List(int skip = 0, int take = 0)
         {
             var users = Enumerable.Empty<User>();
             if (take > 0)
@@ -52,11 +68,11 @@ namespace Project.Api.Controllers.Users
         #endregion
 
         #region Get user by id
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UserProfileDto>> GetById(string id)
+        [HttpGet("{id:guid}")]
+        public virtual async Task<ActionResult<UserProfileDto>> GetById(Guid id)
         {
-            var guidId = Guid.Parse(id);
-            var user = await _userService.GetUser(guidId);
+            //var guidId = Guid.Parse(id);
+            var user = await _userService.GetUser(id);
             if (user == null)
                 return new NotFoundObjectResult("User not found");
             var userDto = _mapper.Map<UserProfileDto>(user);
@@ -67,7 +83,7 @@ namespace Project.Api.Controllers.Users
         #region Register
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<UserProfileDto>> Register(UserRegisterDto userDto)
+        public virtual async Task<ActionResult<UserProfileDto>> Register(UserRegisterDto userDto)
         {
             if (!ModelState.IsValid)
                 return new BadRequestObjectResult(ModelState);
@@ -79,6 +95,20 @@ namespace Project.Api.Controllers.Users
                 await _roleService.AddUserToRoleAsync(user, "user");
                 var registeredUser = await _userService.FindByNameAsync(userDto.UserName);
                 var userProfileDto = _mapper.Map<UserProfileDto>(registeredUser);
+
+                if (_options.PhoneActivation)
+                {
+                    //Generate random verification code
+                    var verificationCode = PublicUtilities.GenerateRandomNumber(100000, 999999);
+
+                    //Send code
+                    //Use SMS sender api
+
+
+                    //Save Code
+                    await _userService.UpdateVerificationCode(registeredUser.Id, verificationCode);
+                }
+
                 return userProfileDto;
             }
             else
@@ -88,10 +118,11 @@ namespace Project.Api.Controllers.Users
         }
         #endregion
 
+
         #region Delete User
         [Route("{id:guid}")]
         [HttpDelete]
-        public async Task<IActionResult> Delete(Guid id)
+        public virtual async Task<IActionResult> Delete(Guid id)
         {
             var user = await _userService.GetUser(id);
             if (user == null)
@@ -107,7 +138,7 @@ namespace Project.Api.Controllers.Users
         #region Update User
         [Route("{id:guid}")]
         [HttpPut]
-        public async Task<ActionResult<UserProfileDto>> Update(Guid id, UpdateUserDto userDto)
+        public virtual async Task<ActionResult<UserProfileDto>> Update(Guid id, UpdateUserDto userDto)
         {
             if (!ModelState.IsValid)
                 return new BadRequestObjectResult(ModelState);
@@ -135,7 +166,7 @@ namespace Project.Api.Controllers.Users
         #region Patch Method
         [HttpPatch("{id:guid}")]
         [AllowAnonymous]
-        public async Task<ActionResult<UserProfileDto>> Patch(Guid id, [FromBody] JsonPatchDocument<User> doc)
+        public virtual async Task<ActionResult<UserProfileDto>> Patch(Guid id, [FromBody] JsonPatchDocument<User> doc)
         {
             if (doc == null)
                 return new BadRequestObjectResult("Null");
@@ -151,6 +182,41 @@ namespace Project.Api.Controllers.Users
             if(result.Status)
             {
                 return _mapper.Map<UserProfileDto>(existingUser);
+            }
+            else
+            {
+                return new BadRequestObjectResult(result.Message);
+            }
+        }
+        #endregion
+
+
+
+
+        //api/users/id/Operation
+
+        #region /api/users/account
+
+
+
+
+        [Route("/api/v{version:apiVersion}/users/{id:guid}/phoneverification")]
+        [HttpPost]
+        [AllowAnonymous]
+        public virtual async Task<ActionResult> VerifyPhone(Guid id, VerificationCodeViewModel vm)
+        {
+
+            var user = await _userService.GetUser(id);
+            if (user == null)
+                return new NotFoundObjectResult("User could not be found.");
+
+            if (user.VerificationCode != vm.VerificationCode)
+                return new BadRequestObjectResult("Verification code is not correct.");
+
+            var result = await _userService.UpdatePhoneVerificationStatus(id, true);
+            if (result.Status)
+            {
+                return new OkObjectResult("User phone has been confirmed.");
             }
             else
             {

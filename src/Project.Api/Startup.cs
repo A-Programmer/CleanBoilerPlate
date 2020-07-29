@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -65,21 +66,28 @@ namespace Project.Api
 
             services.AddAutoMapper(typeof(Startup));
 
+            services.AddCustomApiVersioning();
+
+            services.AddSwaggerService();
+
+            //services.AddMinimalMvc();
             services.AddControllers(options =>
                 {
                     options.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
-                }).
-                AddJsonOptions(options =>
+                    options.Filters.Add(new AuthorizeFilter());
+                })
+                .AddJsonOptions(options =>
                 {
                     //options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCasePropertyNamingPolicy();
                 })
-                .AddNewtonsoftJson()
-                ;
+                .AddNewtonsoftJson();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<User> userManager, RoleManager<Role> roleManager)
         {
+            app.UseCustomSwagger();
+
             app.UseExceptionLogger();
 
             if (env.IsDevelopment())
@@ -103,6 +111,8 @@ namespace Project.Api
             app.UseAuthentication();
             app.UseAuthorization();
 
+
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -113,7 +123,7 @@ namespace Project.Api
         {
             var builder = new ServiceCollection()
                 .AddLogging()
-                .AddMvc()
+                .AddControllers()
                 .AddNewtonsoftJson()
                 .Services.BuildServiceProvider();
 

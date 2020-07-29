@@ -7,6 +7,12 @@ namespace Project.Entities.Common
         public CustomIdentityOptions CustomIdentityOptions { get; set; }
     }
 
+    public class PublicOptions
+    {
+        public bool EmailActivation { get; set; }
+        public bool PhoneActivation { get; set; }
+    }
+
     public class CustomIdentityOptions
     {
         public PasswordOptions PasswordOptions { get; set; }

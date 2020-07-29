@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using Project.Core.Services.SecutiryServices;
 using Project.Entities;
 using Project.Entities.Common;
+using Project.Entities.SharedEntity;
 
 namespace Project.Services.JwtServices
 {
@@ -26,7 +27,8 @@ namespace Project.Services.JwtServices
             _settings = settings.Value;
             this._signInManager = signInManager;
         }
-        public async Task<string> GenerateToken(User user)
+
+        public async Task<AccessToken> GenerateToken(User user)
         {
             var securityKey = Encoding.UTF8.GetBytes(_settings.JwtOptions.SecretKey);
             var signinCredentials = new SigningCredentials(new SymmetricSecurityKey(securityKey), SecurityAlgorithms.HmacSha256Signature);
@@ -48,8 +50,11 @@ namespace Project.Services.JwtServices
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var securityToken = tokenHandler.CreateToken(descriptor);
-            return tokenHandler.WriteToken(securityToken);
+            var securityToken = tokenHandler.CreateJwtSecurityToken(descriptor);
+
+
+
+            return GenerateAccessToken(securityToken);
         }
 
         private async Task<IEnumerable<Claim>> _getUserClaims(User user)
@@ -62,6 +67,16 @@ namespace Project.Services.JwtServices
             return claimsList;
         }
 
+        public AccessToken GenerateAccessToken(JwtSecurityToken securityToken)
+        {
+            var accessToken = new AccessToken
+            {
+                access_token = new JwtSecurityTokenHandler().WriteToken(securityToken),
+                token_type = "Bearer",
+                expires_in = (int)(securityToken.ValidTo - DateTime.UtcNow).TotalSeconds
+            };
+            return accessToken;
+        }
 
     }
 }

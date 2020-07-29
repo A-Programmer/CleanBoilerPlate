@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Project.Common;
 using Project.Common.Utilities;
 using Project.Core.Repositories.UserRepositories;
 using Project.Entities;
@@ -30,6 +31,7 @@ namespace Project.Data.Repositories.UserRepositories
                 .Take(take)
                 .ToListAsync();
         }
+
 
 
         private ApplicationDbContext DbContext

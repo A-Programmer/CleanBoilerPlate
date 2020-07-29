@@ -7,6 +7,7 @@
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <LangVersion>latest</LangVersion>
+    <DocumentationFile>bin\Debug\netcoreapp3.1\Project.Api.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <LangVersion>latest</LangVersion>
@@ -31,8 +32,8 @@
     <Folder Include="AutomapperProfiles\" />
     <Folder Include="AutomapperProfiles\UserAutomapperProfile\" />
     <Folder Include="Resources\UserDtos\" />
-    <Folder Include="Controllers\Rest\" />
-    <Folder Include="Controllers\NotRest\" />
-    <Folder Include="Controllers\Users\" />
+    <Folder Include="ViewModels\" />
+    <Folder Include="ViewModels\IdentityViewModels\" />
+    <Folder Include="Controllers\v1\" />
   </ItemGroup>
 </Project>
