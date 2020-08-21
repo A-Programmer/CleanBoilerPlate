@@ -26,6 +26,7 @@ using Project.Data;
 using Project.Data.Extensions;
 using Project.Entities;
 using Project.Entities.Common;
+using Project.Entities.EntityClasses.IdentityEntities;
 using Project.Services.JwtServices;
 using Project.Services.TestServices;
 using Project.Services.UserServices;
@@ -63,6 +64,7 @@ namespace Project.Api
 
             //Delete later
             services.AddTransient<ITestService, TestService>();
+            services.AddTransient<IMyEntityService, MyEntityService>();
 
             services.AddAutoMapper(typeof(Startup));
 

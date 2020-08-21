@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Project.Entities;
+using Project.Entities.EntityClasses.IdentityEntities;
 
 namespace Project.Data.Extensions
 {

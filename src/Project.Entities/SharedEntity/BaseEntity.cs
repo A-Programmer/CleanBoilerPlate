@@ -16,7 +16,7 @@ namespace Project.Entities
 
     }
 
-    public abstract class BaseEntityWithDetails : BaseEntity<Guid>
+    public abstract class BaseEntityWithDetails<TKey> : BaseEntity<TKey>
     {
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset ModifiedAt { get; set; }

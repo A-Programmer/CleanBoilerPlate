@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Project.Entities;
+using Project.Entities.EntityClasses.IdentityEntities;
 
 namespace Project.Core.Repositories.UserRepositories
 {

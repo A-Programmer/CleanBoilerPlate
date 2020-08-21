@@ -1,7 +1,7 @@
 ﻿using System;
 namespace Project.Entities.EntityClasses.TestEntities
 {
-    public class TestEntity : BaseEntity
+    public class TestEntity : BaseEntityWithDetails<Guid>
     {
         public TestEntity()
         {

@@ -9,6 +9,7 @@ using Project.Common.Utilities;
 using Project.Core;
 using Project.Core.Services.UserServices;
 using Project.Entities;
+using Project.Entities.EntityClasses.IdentityEntities;
 
 namespace Project.Services.UserServices
 {
@@ -236,75 +237,6 @@ namespace Project.Services.UserServices
                 {
                     rm.Message += error.Description + "\n";
                 }
-            }
-            return rm;
-        }
-        public async Task<ResultMessage> UpdateVerificationCode(Guid id, int verificationCode)
-        {
-            var rm = new ResultMessage()
-            {
-                Status = false,
-                Message = ""
-            };
-
-            var user = await _uow.Users.GetByIdAsync(id);
-            if (user != null)
-            {
-                user.VerificationCode = verificationCode;
-                await _uow.CommitAsync();
-                rm.Status = true;
-                rm.Message = "OTP Code generated.";
-            }
-            else
-            {
-                rm.Status = false;
-                rm.Message = "User could not be found.";
-            }
-            return rm;
-        }
-        public async Task<ResultMessage> UpdatePhoneVerificationStatus(Guid id, bool newStatus)
-        {
-            var rm = new ResultMessage()
-            {
-                Status = false,
-                Message = ""
-            };
-
-            var user = await _uow.Users.GetByIdAsync(id);
-            if (user != null)
-            {
-                user.PhoneNumberConfirmed = newStatus;
-                await _uow.CommitAsync();
-                rm.Status = true;
-                rm.Message = "PhoneNumber has been confirmed.";
-            }
-            else
-            {
-                rm.Status = false;
-                rm.Message = "User could not be found.";
-            }
-            return rm;
-        }
-        public async Task<ResultMessage> UpdateEmailVerificationStatus(Guid id, bool newStatus)
-        {
-            var rm = new ResultMessage()
-            {
-                Status = false,
-                Message = ""
-            };
-
-            var user = await _uow.Users.GetByIdAsync(id);
-            if (user != null)
-            {
-                user.EmailConfirmed = newStatus;
-                await _uow.CommitAsync();
-                rm.Status = true;
-                rm.Message = "Email address has been confirmed.";
-            }
-            else
-            {
-                rm.Status = false;
-                rm.Message = "User could not be found.";
             }
             return rm;
         }

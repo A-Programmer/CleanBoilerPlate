@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using Project.Core.Services.SecutiryServices;
 using Project.Entities;
 using Project.Entities.Common;
+using Project.Entities.EntityClasses.IdentityEntities;
 using Project.Entities.SharedEntity;
 
 namespace Project.Services.JwtServices

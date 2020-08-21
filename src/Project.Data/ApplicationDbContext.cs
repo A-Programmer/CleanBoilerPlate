@@ -9,6 +9,7 @@ using Project.Common.Utilities;
 using Project.Entities;
 using Project.Entities.EntityClasses.TestEntities;
 using Project.Data.Extensions;
+using Project.Entities.EntityClasses.IdentityEntities;
 
 namespace Project.Data
 {
@@ -21,6 +22,7 @@ namespace Project.Data
 
 
         public DbSet<TestEntity> TestEntities { get; set; }
+        public DbSet<MyEntity> MyEntities { get; set; }
 
 
 
@@ -28,13 +30,14 @@ namespace Project.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            var entitiesAssembly = typeof(IEntity).Assembly;
+
             ////Add entities as a DbSet dynamically
-            //var entitiesAssembly = typeof(IEntity).Assembly;
             //modelBuilder.RegisterAllEntities<IEntity>(entitiesAssembly);
 
             #region Register Model Configurations
             //if TypeConfigurations used
-            //modelBuilder.RegisterEntityTypeConfiguration(entitiesAssembly);
+            modelBuilder.RegisterEntityTypeConfiguration(entitiesAssembly);
             #endregion
 
             //Manage delete behevior
@@ -53,23 +56,27 @@ namespace Project.Data
         public override int SaveChanges()
         {
             FixYeke();
+            SetDetailFields();
             return base.SaveChanges();
         }
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
             FixYeke();
+            SetDetailFields();
             return base.SaveChanges(acceptAllChangesOnSuccess);
         }
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
             FixYeke();
+            SetDetailFields();
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             FixYeke();
+            SetDetailFields();
             return base.SaveChangesAsync(cancellationToken);
         }
         #endregion
@@ -101,6 +108,76 @@ namespace Project.Data
                     }
                 }
             }
+        }
+        #endregion
+
+        #region Setting detail fields
+
+        public void SetDetailFields()
+        {
+             //x.State == EntityState.Modified
+            var addedEntities = ChangeTracker.Entries()
+                .Where(x => x.State == EntityState.Added);
+            foreach (var item in addedEntities)
+            {
+                if (item.Entity == null)
+                    continue;
+
+                var createdAtProperty = item.Entity.GetType().GetProperties()
+                    .FirstOrDefault(x => x.Name == "CreatedAt");
+                var modifiedAtProperty = item.Entity.GetType().GetProperties()
+                    .FirstOrDefault(x => x.Name == "ModifiedAt");
+                var creatorUserIpProperty = item.Entity.GetType().GetProperties()
+                    .FirstOrDefault(x => x.Name == "CreatedByUserIp");
+                var modifierUserIpProperty = item.Entity.GetType().GetProperties()
+                    .FirstOrDefault(x => x.Name == "ModifiedByUserIp");
+
+                if(createdAtProperty != null)
+                {
+                    createdAtProperty.SetValue(item.Entity, DateTimeOffset.Now);
+                }
+
+                if(creatorUserIpProperty != null)
+                {
+                    creatorUserIpProperty.SetValue(item.Entity, "127.0.0.1");
+                }
+
+                if (modifiedAtProperty != null)
+                {
+                    modifiedAtProperty.SetValue(item.Entity, DateTimeOffset.Now);
+                }
+
+                if (modifierUserIpProperty != null)
+                {
+                    modifierUserIpProperty.SetValue(item.Entity, "127.0.0.1");
+                }
+            }
+
+
+            var changedEntities = ChangeTracker.Entries()
+                .Where(x => x.State == EntityState.Modified);
+            foreach (var item in changedEntities)
+            {
+                if (item.Entity == null)
+                    continue;
+
+                var modifiedAtProperty = item.Entity.GetType().GetProperties()
+                    .FirstOrDefault(x => x.Name == "ModifiedAt");
+                var modifierUserIpProperty = item.Entity.GetType().GetProperties()
+                    .FirstOrDefault(x => x.Name == "ModifiedByUserIp");
+
+
+                if (modifiedAtProperty != null)
+                {
+                    modifiedAtProperty.SetValue(item.Entity, DateTimeOffset.Now);
+                }
+
+                if (modifierUserIpProperty != null)
+                {
+                    modifierUserIpProperty.SetValue(item.Entity, "127.0.0.1");
+                }
+            }
+
         }
         #endregion
     }

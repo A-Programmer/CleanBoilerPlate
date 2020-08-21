@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Project.Common;
 using Project.Entities;
+using Project.Entities.EntityClasses.IdentityEntities;
 
 namespace Project.Core.Services.UserServices
 {
@@ -33,9 +34,6 @@ namespace Project.Core.Services.UserServices
         Task UpdateSecurityStampAsync(User user);
         Task<ResultMessage> RemoveUser(User user);
         Task<ResultMessage> Update(User user);
-        Task<ResultMessage> UpdateVerificationCode(Guid id, int verificationCode);
-        Task<ResultMessage> UpdatePhoneVerificationStatus(Guid id, bool newStatus);
-        Task<ResultMessage> UpdateEmailVerificationStatus(Guid id, bool newStatus);
 
 
         Task<User> GetUser(Guid id);

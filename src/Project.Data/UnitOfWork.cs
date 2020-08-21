@@ -14,6 +14,7 @@ namespace Project.Data
 
         private UserRepository _users;
         private TestRepository _testRepository;
+        private MyEntityRepository _entityRepository;
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -22,6 +23,8 @@ namespace Project.Data
 
         public ITestRepository TestRepository => _testRepository = _testRepository ?? new TestRepository(_context);
         public IUserRepository Users => _users = _users ?? new UserRepository(_context);
+
+        public IMyEntityRepository MyEntityRepository => _entityRepository ?? new MyEntityRepository(_context);
 
         public async Task<int> CommitAsync()
         {

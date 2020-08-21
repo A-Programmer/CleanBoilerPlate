@@ -17,6 +17,7 @@
     <Folder Include="Repositories\UserRepositories\" />
     <Folder Include="Repositories\TestReositories\" />
     <Folder Include="Extensions\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Project.Core\Project.Core.csproj" />

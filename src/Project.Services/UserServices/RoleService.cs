@@ -5,6 +5,7 @@ using Project.Common;
 using Project.Core;
 using Project.Core.Services.UserServices;
 using Project.Entities;
+using Project.Entities.EntityClasses.IdentityEntities;
 
 namespace Project.Services.UserServices
 {

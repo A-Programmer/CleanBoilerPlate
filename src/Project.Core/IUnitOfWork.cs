@@ -9,6 +9,7 @@ namespace Project.Core
     {
         ITestRepository TestRepository { get; }
         IUserRepository Users { get; }
+        IMyEntityRepository MyEntityRepository { get;  }
         Task<int> CommitAsync();
     }
 }

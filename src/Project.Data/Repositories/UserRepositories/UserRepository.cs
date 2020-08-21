@@ -7,6 +7,7 @@ using Project.Common;
 using Project.Common.Utilities;
 using Project.Core.Repositories.UserRepositories;
 using Project.Entities;
+using Project.Entities.EntityClasses.IdentityEntities;
 
 namespace Project.Data.Repositories.UserRepositories
 {

@@ -4,6 +4,7 @@ using AutoMapper;
 using Project.Api.Resources.UserDtos;
 using Project.Common.Utilities;
 using Project.Entities;
+using Project.Entities.EntityClasses.IdentityEntities;
 
 namespace Project.Api.AutomapperProfiles.UserAutomapperProfile
 {
@@ -19,7 +20,6 @@ namespace Project.Api.AutomapperProfiles.UserAutomapperProfile
                 .ReverseMap();
 
             CreateMap<User, UserProfileDto>()
-                .ForMember(x => x.Gender, opt => opt.MapFrom(x => x.Gender.ToDisplay(DisplayProperty.Name)))
                 .ReverseMap();
 
             CreateMap<User, UpdateUserDto>()

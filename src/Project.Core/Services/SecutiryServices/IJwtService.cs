@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Project.Entities;
+using Project.Entities.EntityClasses.IdentityEntities;
 using Project.Entities.SharedEntity;
 
 namespace Project.Core.Services.SecutiryServices

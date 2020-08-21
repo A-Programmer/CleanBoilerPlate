@@ -14,7 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using Project.Common.Utilities;
 using Project.Core.Services.UserServices;
 using Project.Data;
-using Project.Entities;
+using Project.Entities.EntityClasses.IdentityEntities;
 using Project.Entities.Common;
 using Microsoft.OpenApi.Models;
 using System.IO;
@@ -56,10 +56,10 @@ namespace Project.Webframeworks.Configurations
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                //options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
-                    //x => x.MigrationsAssembly("Project.Data"));
-                options.UseNpgsql(configuration.GetConnectionString("PostgresConnection"),
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
                     x => x.MigrationsAssembly("Project.Data"));
+                //options.UseNpgsql(configuration.GetConnectionString("PostgresConnection"),
+                //    x => x.MigrationsAssembly("Project.Data"));
             });
         }
 
